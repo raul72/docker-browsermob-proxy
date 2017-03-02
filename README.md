@@ -2,9 +2,9 @@
 
 This is the Git repo of the Docker image for [BrowserMob Proxy](https://hub.docker.com/r/raul72/browsermob-proxy/).
 
-![](https://img.shields.io/docker/stars/raul72/browsermob-proxy.svg)
-![](https://img.shields.io/docker/pulls/raul72/browsermob-proxy.svg)
-![](https://img.shields.io/docker/automated/raul72/browsermob-proxy.svg)
+[![Stars](https://img.shields.io/docker/stars/raul72/browsermob-proxy.svg)](https://hub.docker.com/r/raul72/browsermob-proxy/)
+[![Pulls](https://img.shields.io/docker/pulls/raul72/browsermob-proxy.svg)](https://hub.docker.com/r/raul72/browsermob-proxy/)
+[![Automated](https://img.shields.io/docker/automated/raul72/browsermob-proxy.svg)](https://hub.docker.com/r/raul72/browsermob-proxy/)
 
 
 # What is BrowserMob Proxy
