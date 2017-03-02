@@ -1,7 +1,7 @@
 FROM alpine 
 
-ENV BMP_VERSION="2.1.4" \
-    BMP_DOWNLOAD_SHA256="27c4080411adff919586e909c664c73bebb8ba8bfcaea259ce58327222e5e8fb"
+ENV BMP_VERSION="2.1.2" \
+    BMP_DOWNLOAD_SHA256="724894328056b47b0d71fffcccfc4747b0e4e88d5cd9cb0ef59c435044d9b7c5"
 
 RUN apk update \
     && apk add ca-certificates curl unzip openjdk8-jre \
