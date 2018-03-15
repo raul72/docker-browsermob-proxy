@@ -11,7 +11,8 @@ RUN curl -fSL -o /tmp/browsermob-proxy.zip "https://github.com/lightbody/browser
 	&& echo "$BMP_DOWNLOAD_SHA256  /tmp/browsermob-proxy.zip" |  sha256sum -c - \
     && unzip /tmp/browsermob-proxy.zip -d / \
     && mv /browsermob-proxy-$BMP_VERSION /browsermob-proxy \
-    && rm -f /tmp/browsermob-proxy.zip
+    && rm -f /tmp/browsermob-proxy.zip \
+    && rm -rf /var/cache/apk/*
 
 ENV BMP_PORT="8080" \
     BMP_ADDRESS="0.0.0.0" \
