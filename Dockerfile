@@ -1,10 +1,10 @@
-FROM alpine 
+FROM java:8-jre-alpine
 
 ENV BMP_VERSION="2.1.4" \
     BMP_DOWNLOAD_SHA256="27c4080411adff919586e909c664c73bebb8ba8bfcaea259ce58327222e5e8fb"
 
 RUN apk update \
-    && apk add ca-certificates curl unzip openjdk8-jre tzdata \
+    && apk add ca-certificates curl unzip tzdata \
     && update-ca-certificates
 
 RUN curl -fSL -o /tmp/browsermob-proxy.zip "https://github.com/lightbody/browsermob-proxy/releases/download/browsermob-proxy-$BMP_VERSION/browsermob-proxy-$BMP_VERSION-bin.zip" \
