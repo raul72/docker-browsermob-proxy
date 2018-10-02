@@ -1,0 +1,38 @@
+sudo: required
+services: docker
+language: bash
+
+env:
+    global:
+        - DOCKER_REPO=raul72/browsermob-proxy-travis-buildtest
+        - QEMU_VER=v2.12.0-1
+    matrix:
+        - ARCH=x86_64   QEMU_ARCH=x86_64    TAG_ARCH=amd64
+        - ARCH=armhf    QEMU_ARCH=arm       TAG_ARCH=arm32v6
+        - ARCH=aarch64  QEMU_ARCH=aarch64   TAG_ARCH=arm64v8
+
+script:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker run --rm --privileged multiarch/qemu-user-static:register
+  - wget https://github.com/multiarch/qemu-user-static/releases/download/${QEMU_VER}/x86_64_qemu-${QEMU_ARCH}-static.tar.gz
+  - cp Dockerfile Dockerfile.$TAG_ARCH
+  - sed -i "s#FROM openjdk#FROM ${TAG_ARCH}/openjdk#g" Dockerfile.$TAG_ARCH
+  - sed -i "2i ADD x86_64_qemu-${QEMU_ARCH}-static.tar.gz /usr/bin" Dockerfile.$TAG_ARCH
+  - docker build  -f Dockerfile.$TAG_ARCH -t "${DOCKER_REPO}:${TAG_ARCH}-latest" .
+  - docker images
+  - docker push "${DOCKER_REPO}:${TAG_ARCH}-latest"
+
+jobs:
+  include:
+      - stage: Manifest
+        script:
+          # manifest is experimental so need to install edge repository
+          # and enable experimental features
+          - sudo apt-get remove docker-ce
+          - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) edge"
+          - sudo apt-get update
+          - sudo apt-get install -y docker-ce
+          - mkdir -p ~/.docker
+          - echo '{"experimental":true}' | sudo tee  ~/.docker/config.json
+          - sudo service docker restart
+          - bash ./manifest.sh

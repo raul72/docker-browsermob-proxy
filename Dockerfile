@@ -1,10 +1,4 @@
-ARG ARCH=amd64
-
-FROM java:8-jre-alpine AS dependencies-amd64
-FROM arm32v6/openjdk:8-jre-alpine AS dependencies-arm32v6
-FROM arm64v8/openjdk:8-jre-alpine AS dependencies-arm64v8
-
-FROM dependencies-${ARCH} as build
+FROM openjdk:8-jre-alpine
 
 RUN apk update \
     && apk add ca-certificates curl unzip tzdata \
