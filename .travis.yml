@@ -26,7 +26,7 @@ jobs:
   include:
       - stage: Manifest
         script:
-          # manifest is experimental so need to install edge repository
+          # manifest is experimental so need to install from edge repository
           # and enable experimental features
           - sudo apt-get remove docker-ce
           - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) edge"
