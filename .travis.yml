@@ -33,6 +33,6 @@ jobs:
           - sudo apt-get update
           - sudo apt-get install -y docker-ce
           - mkdir -p ~/.docker
-          - echo '{"experimental": "enabled"}' | tee  ~/.docker/config.json
+          - echo '{"experimental":"enabled"}' | tee  ~/.docker/config.json
           - sudo service docker restart
           - bash ./manifest.sh
