@@ -18,6 +18,7 @@ script:
   - cp Dockerfile Dockerfile.$TAG_ARCH
   - sed -i "s#FROM openjdk#FROM ${TAG_ARCH}/openjdk#g" Dockerfile.$TAG_ARCH
   - sed -i "2i ADD x86_64_qemu-${QEMU_ARCH}-static.tar.gz /usr/bin" Dockerfile.$TAG_ARCH
+  - cat Dockerfile.$TAG_ARCH
   - docker build  -f Dockerfile.$TAG_ARCH -t "${DOCKER_REPO}:${TAG_ARCH}-latest" .
   - docker images
   - docker push "${DOCKER_REPO}:${TAG_ARCH}-latest"
