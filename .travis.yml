@@ -36,4 +36,5 @@ jobs:
           - mkdir -p ~/.docker
           - echo '{"experimental":"enabled"}' | tee  ~/.docker/config.json
           - sudo service docker restart
+          - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
           - bash ./manifest.sh
