@@ -1,16 +1,16 @@
-ARG ARCH=amd64
+FROM amd64/openjdk:8-jre-alpine AS dependencies-amd64
+FROM arm32v6/openjdk:8-jre-alpine AS dependencies-armv6
+FROM arm64v8/openjdk:8-jre-alpine AS dependencies-arm64
 
-FROM java:8-jre-alpine AS dependencies-amd64
+ARG TARGETARCH=amd64
+ARG TARGETVARIANT
+
+FROM dependencies-${TARGETARCH}${TARGETVARIANT} as build
+
 RUN apk update \
     && apk add ca-certificates curl unzip tzdata \
     && update-ca-certificates
 
-FROM arm32v6/openjdk:8-jre-alpine AS dependencies-arm32v6
-RUN apk update \
-    && apk add ca-certificates curl unzip tzdata \
-    && update-ca-certificates
-
-FROM dependencies-${ARCH} as build
 ENV BMP_VERSION="2.1.4" \
     BMP_DOWNLOAD_SHA256="27c4080411adff919586e909c664c73bebb8ba8bfcaea259ce58327222e5e8fb"
 

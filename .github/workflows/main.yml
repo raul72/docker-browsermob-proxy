@@ -1,0 +1,68 @@
+name: Build and Publish
+
+on:
+  push:
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - 'master'
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-publish:
+    name: Build and Publish
+    runs-on: ubuntu-latest
+    steps:
+
+      # https://github.com/actions/checkout
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      # https://github.com/docker/setup-buildx-action
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to GHCR
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Login to Docker Hub
+        if: github.ref_type == 'tag'
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          # list of Docker images to use as base name for tags
+          images: |
+            name=ghcr.io/raul72/browsermob-proxy
+            name=raul72/browsermob-proxy,enable=${{ github.ref_type == 'tag' }}
+          # Docker tags based on the following events/attributes
+          # https://github.com/docker/metadata-action#tags-input
+          tags: |
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=raw,value=latest,enable=${{ github.ref_type == 'tag' }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64,linux/arm/v6
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
