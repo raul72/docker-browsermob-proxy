@@ -1,15 +1,14 @@
-FROM amd64/openjdk:8-jre-alpine AS dependencies-amd64
-FROM arm32v6/openjdk:8-jre-alpine AS dependencies-armv6
-FROM arm64v8/openjdk:8-jre-alpine AS dependencies-arm64
+FROM amd64/eclipse-temurin:8-jre AS dependencies-amd64
+FROM arm32v7/eclipse-temurin:8-jre AS dependencies-armv7
+FROM arm64v8/eclipse-temurin:8-jre AS dependencies-arm64
 
 ARG TARGETARCH=amd64
 ARG TARGETVARIANT
 
 FROM dependencies-${TARGETARCH}${TARGETVARIANT} as build
 
-RUN apk update \
-    && apk add ca-certificates curl unzip tzdata \
-    && update-ca-certificates
+RUN apt-get update \
+    && apt-get install unzip tzdata
 
 ENV BMP_VERSION="2.1.4" \
     BMP_DOWNLOAD_SHA256="27c4080411adff919586e909c664c73bebb8ba8bfcaea259ce58327222e5e8fb"
@@ -19,7 +18,8 @@ RUN curl -fSL -o /tmp/browsermob-proxy.zip "https://github.com/lightbody/browser
     && unzip /tmp/browsermob-proxy.zip -d / \
     && mv /browsermob-proxy-$BMP_VERSION /browsermob-proxy \
     && rm -f /tmp/browsermob-proxy.zip \
-    && rm -rf /var/cache/apk/*
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 ENV BMP_PORT="8080" \
     BMP_ADDRESS="0.0.0.0" \
